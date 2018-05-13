@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE eagle SYSTEM "eagle.dtd">
+<eagle version="7.2.0">
+<drawing>
+<settings>
+<setting alwaysvectorfont="no"/>
+<setting verticaltext="up"/>
+</settings>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<layers>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
+<layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
+<layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
+<layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
+<layer number="33" name="tFinish" color="6" fill="3" visible="no" active="yes"/>
+<layer number="34" name="bFinish" color="6" fill="6" visible="no" active="yes"/>
+<layer number="35" name="tGlue" color="7" fill="4" visible="no" active="yes"/>
+<layer number="36" name="bGlue" color="7" fill="5" visible="no" active="yes"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="no" active="yes"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="no" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
+<layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
+<layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="49" name="Reference" color="13" fill="1" visible="yes" active="yes"/>
+<layer number="51" name="tDocu" color="14" fill="1" visible="yes" active="yes"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="90" name="Modules" color="5" fill="1" visible="yes" active="yes"/>
+<layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="93" name="Pins" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="94" name="Symbols" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="95" name="Names" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+</layers>
+<library>
+<description>&lt;h1&gt;Volks73's Library for Bourns, Inc. Parts&lt;/h1&gt;
+&lt;p&gt;
+&lt;a href="https://github.com/volks73/eagle-libraries/"&gt;Repository&lt;/a&gt;
+&lt;/p&gt;
+&lt;h3&gt;Licensing:&lt;/h3&gt; 
+&lt;p&gt;
+Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0), &lt;a href="http://creativecommons.org/licenses/by-sa/3.0/"&gt;http://creativecommons.org/licenses/by-sa/3.0/&lt;/a&gt;. 
+&lt;/p&gt;
+&lt;p&gt;
+For attribution, please provide a link in any documentation or design files to the repository on Github. 
+&lt;/p&gt;</description>
+<packages>
+<package name="1812">
+<description>&lt;h1&gt;1812 (4532 Metric) Surface Mount Device (SMD)&lt;/h1&gt;
+&lt;h2&gt;MF-MSMF Series, Style 1 Size&lt;/h2&gt;</description>
+<smd name="1" x="-2.185" y="0" dx="1.55" dy="3.3" layer="1"/>
+<smd name="2" x="2.185" y="0" dx="1.55" dy="3.3" layer="1" rot="R180"/>
+<text x="-3.175" y="2.54" size="1.27" layer="25">&gt;NAME</text>
+<text x="-3.81" y="-3.81" size="1.27" layer="27">&gt;VALUE</text>
+<wire x1="-2.185" y1="1.705" x2="2.185" y2="1.705" width="0.127" layer="49"/>
+<wire x1="2.185" y1="-1.705" x2="-2.185" y2="-1.705" width="0.127" layer="49"/>
+<wire x1="-2.185" y1="1.705" x2="-2.185" y2="-1.705" width="0.127" layer="49"/>
+<wire x1="2.185" y1="-1.705" x2="2.185" y2="1.705" width="0.127" layer="49"/>
+<rectangle x1="1.885" y1="-1.705" x2="2.185" y2="1.705" layer="51"/>
+<rectangle x1="-2.185" y1="-1.705" x2="-1.885" y2="1.705" layer="51"/>
+</package>
+<package name="W">
+<description>&lt;h1&gt;3/8" Squre Trim Pot&lt;/h1&gt;
+&lt;h2&gt;Rectangular, Through Hole, Top Adjustment, "W" Size Code for 3296&lt;/h2&gt;</description>
+<pad name="1" x="0" y="-2.54" drill="0.8" shape="square"/>
+<pad name="2" x="0" y="0" drill="0.8"/>
+<pad name="3" x="0" y="2.54" drill="0.8"/>
+<wire x1="-1.27" y1="-3.81" x2="-1.27" y2="3.81" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="3.81" x2="2.413" y2="3.81" width="0.127" layer="21"/>
+<wire x1="2.413" y1="3.81" x2="2.413" y2="-3.81" width="0.127" layer="21"/>
+<wire x1="2.413" y1="-3.81" x2="-1.27" y2="-3.81" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="3.81" x2="-2.413" y2="3.81" width="0.127" layer="21"/>
+<wire x1="-2.413" y1="3.81" x2="-2.413" y2="4.445" width="0.127" layer="21"/>
+<wire x1="-2.413" y1="4.445" x2="2.413" y2="4.445" width="0.127" layer="21"/>
+<wire x1="2.413" y1="4.445" x2="2.413" y2="3.81" width="0.127" layer="21"/>
+<wire x1="2.413" y1="-3.81" x2="2.413" y2="-4.445" width="0.127" layer="21"/>
+<wire x1="2.413" y1="-4.445" x2="-2.413" y2="-4.445" width="0.127" layer="21"/>
+<wire x1="-2.413" y1="-4.445" x2="-2.413" y2="-3.81" width="0.127" layer="21"/>
+<wire x1="-2.413" y1="-3.81" x2="-1.27" y2="-3.81" width="0.127" layer="21"/>
+<text x="-2.54" y="5.08" size="1.27" layer="25">&gt;NAME</text>
+<text x="-3.175" y="-6.35" size="1.27" layer="27">&gt;VALUE</text>
+<circle x="0" y="0" radius="0.2667" width="0.127" layer="51"/>
+<circle x="0" y="2.54" radius="0.2667" width="0.127" layer="51"/>
+<circle x="0" y="-2.54" radius="0.2667" width="0.127" layer="51"/>
+<wire x1="-2.413" y1="4.7625" x2="2.54" y2="4.7625" width="0.127" layer="49"/>
+<wire x1="2.54" y1="4.7625" x2="2.54" y2="-4.7625" width="0.127" layer="49"/>
+<wire x1="2.54" y1="-4.7625" x2="-2.413" y2="-4.7625" width="0.127" layer="49"/>
+<wire x1="-2.413" y1="4.7625" x2="-2.413" y2="-4.7625" width="0.127" layer="49"/>
+</package>
+</packages>
+<symbols>
+<symbol name="FUSE">
+<pin name="1" x="0" y="12.7" visible="off" length="middle" direction="pas" rot="R270"/>
+<pin name="2" x="0" y="-12.7" visible="off" length="middle" direction="pas" rot="R90"/>
+<wire x1="0" y1="-7.62" x2="0" y2="0" width="0.254" layer="94" curve="-180"/>
+<wire x1="0" y1="7.62" x2="0" y2="0" width="0.254" layer="94" curve="-180"/>
+<text x="-5.08" y="-5.08" size="1.778" layer="95" rot="R90">&gt;NAME</text>
+<text x="7.62" y="-5.08" size="1.778" layer="95" rot="R90">&gt;VALUE</text>
+</symbol>
+<symbol name="POT">
+<pin name="1" x="-12.7" y="0" visible="off" length="middle" direction="pas"/>
+<pin name="3" x="12.7" y="0" visible="off" length="middle" direction="pas" rot="R180"/>
+<wire x1="7.62" y1="0" x2="6.35" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="6.35" y1="-1.27" x2="5.08" y2="1.27" width="0.254" layer="94"/>
+<wire x1="5.08" y1="1.27" x2="3.81" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="3.81" y1="-1.27" x2="2.54" y2="1.27" width="0.254" layer="94"/>
+<wire x1="2.54" y1="1.27" x2="1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="-1.27" x2="0" y2="1.27" width="0.254" layer="94"/>
+<wire x1="0" y1="1.27" x2="-1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="-1.27" x2="-2.54" y2="1.27" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="1.27" x2="-3.81" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="-3.81" y1="-1.27" x2="-5.08" y2="1.27" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="1.27" x2="-6.35" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="-6.35" y1="-1.27" x2="-7.62" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="1.27" x2="1.27" y2="2.54" width="0.254" layer="94"/>
+<wire x1="1.27" y1="2.54" x2="0" y2="2.54" width="0.254" layer="94"/>
+<wire x1="0" y1="2.54" x2="-1.27" y2="2.54" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="2.54" x2="0" y2="1.27" width="0.254" layer="94"/>
+<wire x1="0" y1="2.54" x2="0" y2="5.08" width="0.254" layer="94"/>
+<pin name="2" x="0" y="10.16" visible="off" length="middle" direction="pas" rot="R270"/>
+<text x="7.62" y="2.54" size="1.778" layer="97">CW</text>
+<text x="-10.16" y="2.54" size="1.778" layer="97">CCW</text>
+<text x="1.27" y="6.35" size="1.778" layer="97">WIPER</text>
+<text x="-12.7" y="-5.08" size="1.778" layer="95">&gt;NAME</text>
+<text x="2.54" y="-5.08" size="1.778" layer="96">&gt;VALUE</text>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="MF-MSMF*?" prefix="F" uservalue="yes">
+<description>&lt;h1&gt;PTC Resettable Fuse&lt;/h1&gt;
+&lt;h3&gt;Documentation&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.bourns.com/data/global/pdfs/mfmsmf.pdf"&gt;Datasheet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Features&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Compliant with AEC-Q200 Rev-C- Stress Test Qualification for Passive Components in Automotive Applications&lt;/li&gt;
+&lt;li&gt;100% electrically compatible with all previous generations of 1812 SMT devices&lt;/li&gt;
+&lt;li&gt;Compatible with Pb and Pb-free solder reflow profiles&lt;/li&gt;
+&lt;li&gt;RoHS compliant* and halogen free**&lt;/li&gt;
+&lt;li&gt;Surface mount packaging for automated assembly&lt;/li&gt;
+&lt;li&gt;Standard 4532 mm (1812 mils) footprint&lt;/li&gt;
+&lt;li&gt;Patents pending&lt;/li&gt;
+&lt;/ul&gt;</description>
+<gates>
+<gate name="G$1" symbol="FUSE" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="1812">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name="075/24">
+<attribute name="CATEGORY" value="Circuit Protection"/>
+<attribute name="CURRENT-MAX" value="40A"/>
+<attribute name="CURRENT-TRIP" value="1.5A"/>
+<attribute name="DESCRIPTION" value="PTC RESETTABLE .75A 24V 1812"/>
+<attribute name="DOCUMENTATION_LINK" value="&lt;a href=&quot;http://www.bourns.com/data/global/pdfs/mfmsmf.pdf&quot;&gt;Datasheet&lt;/a&gt;"/>
+<attribute name="DOCUMENTATION_URL" value="http://www.bourns.com/data/global/pdfs/mfmsmf.pdf"/>
+<attribute name="FAMILY" value="PTC Resettable Fuses"/>
+<attribute name="MANUFACTURER" value="Bourns Inc."/>
+<attribute name="PACKAGE" value="1812 (4532 Metric), Concave"/>
+<attribute name="PART_NUMBER" value="MF-MSMF075/24-2"/>
+<attribute name="R_MINMAX" value="0.11 ~ 0.450 Ohm"/>
+<attribute name="SERIES" value="MF-MSMF"/>
+<attribute name="SUPPLIER_ITEM_LINK" value="&lt;a href=&quot;http://www.digikey.com/product-detail/en/MF-MSMF075%2F24-2/MF-MSMF075%2F24-2CT-ND/662844&quot;&gt;Details&lt;/a&gt;"/>
+<attribute name="SUPPLIER_ITEM_NUMBER" value="MF-MSMF075/24-2CT-ND"/>
+<attribute name="SUPPLIER_ITEM_URL" value="http://www.digikey.com/product-detail/en/MF-MSMF075%2F24-2/MF-MSMF075%2F24-2CT-ND/662844"/>
+<attribute name="SUPPLIER_LINK" value="&lt;a href=&quot;http://www.digikey.com&quot;&gt;Home Page&lt;/a&gt;"/>
+<attribute name="SUPPLIER_NAME" value="Digi-Key"/>
+<attribute name="SUPPLIER_URL" value="http://www.digikey.com"/>
+<attribute name="TIME_TO_TRIP" value="0.2s"/>
+<attribute name="VOLTAGE-MAX" value="24V"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="3296?-*" prefix="VR" uservalue="yes">
+<description>&lt;h1&gt;Trim Potentiometer (Pot)&lt;/h1&gt;
+&lt;h3&gt;Documentation&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.bourns.com/data/global/pdfs/3296.pdf"&gt;Datasheet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Features&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Multiturn/Cermet/Industrial/Sealed&lt;/li&gt;
+&lt;li&gt;5 terminal styles&lt;/li&gt;
+&lt;li&gt;Tape and reel packaging&lt;/li&gt;
+&lt;li&gt;Chevron seal design&lt;/li&gt;
+&lt;li&gt;Listed on the QPL for style RJ24 per MIL-R_22097 and RJR24 per High-Rel Mil-R-39035&lt;/li&gt;
+&lt;li&gt;Mounting hardware available (H-117P)&lt;/li&gt;
+&lt;li&gt;RoHS compliant* version available&lt;/li&gt;
+&lt;li&gt;For trimmer applications/processing guidelines, &lt;a href="http://www.bourns.com/data/global/pdfs/ap_proc.pdf"&gt;click here&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+<gates>
+<gate name="G$1" symbol="POT" x="0" y="0"/>
+</gates>
+<devices>
+<device name="W" package="W">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+</connects>
+<technologies>
+<technology name="1-103LF">
+<attribute name="ADJUSTMENT_TYPE" value="Tope Adjustment"/>
+<attribute name="CATEGORY" value="Potentiometers, Variable Resistors"/>
+<attribute name="DESCRIPTION" value="TRIMMER 10K OHM 0.5W PC PIN"/>
+<attribute name="DOCUMENTATION_LINK" value="&lt;a href=&quot;http://www.bourns.com/data/global/pdfs/3296.pdf&quot;&gt;Datasheet&lt;/a&gt;"/>
+<attribute name="DOCUMENTATION_URL" value="http://www.bourns.com/data/global/pdfs/3296.pdf"/>
+<attribute name="FAMILY" value="Trimmer Potentiometers"/>
+<attribute name="MANUFACTURER" value="Bourns Inc"/>
+<attribute name="MOUNTING_TYPE" value="Through Hole"/>
+<attribute name="NUMBER_OF_TURNS" value="25"/>
+<attribute name="PART_NUMBER" value="3296W-1-103LF"/>
+<attribute name="POWER" value="0.5W, 1/2W"/>
+<attribute name="RESISTANCE" value="10k"/>
+<attribute name="RESISTIVE_MATERIAL" value="Cermet"/>
+<attribute name="SERIES" value="Trimpt 3296 - Sealed"/>
+<attribute name="SIZE" value="Rectangular - 0.375&quot; x 0.190&quot; Face x 0.395&quot; H (9.53mm x 4.83mm x 10.03mm)"/>
+<attribute name="STANDARD_PACKAGE" value="50"/>
+<attribute name="SUPPLIER_ITEM_LINK" value="&lt;a href=&quot;http://www.digikey.com/product-detail/en/3296W-1-103LF/3296W-103LF-ND/1088045&quot;&gt;Details&lt;/a&gt;"/>
+<attribute name="SUPPLIER_ITEM_NUMBER" value="3296W-103LF-ND"/>
+<attribute name="SUPPLIER_ITEM_URL" value="http://www.digikey.com/product-detail/en/3296W-1-103LF/3296W-103LF-ND/1088045"/>
+<attribute name="SUPPLIER_LINK" value="&lt;a href=&quot;http://www.digikey.com&quot;&gt;Home Page&lt;/a&gt;"/>
+<attribute name="SUPPLIER_NAME" value="Digi-Key"/>
+<attribute name="SUPPLIER_URL" value="http://www.digikey.com"/>
+<attribute name="TEMPERATURE_COEFFICIENT" value="100ppm/C"/>
+<attribute name="TERMINATION_STYLE" value="PC Pin"/>
+<attribute name="TOLERANCE" value="10%"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
+</drawing>
+</eagle>
