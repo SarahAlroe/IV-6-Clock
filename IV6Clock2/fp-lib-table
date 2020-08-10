@@ -1,0 +1,5 @@
+(fp_lib_table
+  (lib (name AP3012KTR)(type KiCad)(uri /home/saraha/Documents/KiCad/library/KiCad-libs/AP3012KTR.pretty)(options "")(descr ""))
+  (lib (name VFD)(type KiCad)(uri /home/saraha/Documents/KiCad/library/KiCad-libs/VFD.pretty)(options "")(descr ""))
+  (lib (name logos)(type KiCad)(uri /home/saraha/Documents/KiCad/library/logos.pretty)(options "")(descr ""))
+)
