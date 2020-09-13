@@ -6,19 +6,32 @@
 //Fresh install overwrites things that may or may not matter for a first time setup
 #define freshInstall false
 
-//Display hex values
-const byte dispNums[] = {0xB7, 0xA0, 0x3B, 0xB9, 0xAC, 0x9D, 0x8F, 0xB0, 0xBF, 0xBC}; //0-9 on display
-const byte dotVal = 0x40; // Add this for dot on display
+// Ascii lookup table, but with numbers at beginning
+//                                                                                n= 0,1,2,3,4,5,6,7,8,9,
+const byte c[] = {0x7B, 0x41, 0x37, 0x67, 0x4D, 0x6E, 0x7E, 0x43, 0x7F, 0x4F, //n  - 0,1,2,3,4,5,6,7,8,9,
+                  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //1n -  , , , , , , , , , ,
+                  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //2n -  , , , , , , , , , ,
+                  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //3n -  , , ,!,",#,$,%,&,',
+                  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x7B, 0x41, //4n - (,),*,+,,,-,.,/,0,1,
+                  0x37, 0x67, 0x4D, 0x6E, 0x7E, 0x43, 0x7F, 0x4F, 0x00, 0x00, //5n - 2,3,4,5,6,7,8,9,:,;,
+                  0x00, 0x00, 0x00, 0x00, 0x00, 0x5F, 0x7F, 0x00, 0x7B, 0x00, //6n - <,=,>,?,@,A,B,C,D,E,
+                  0x1E, 0x00, 0x5D, 0x00, 0x00, 0x00, 0x00, 0x5B, 0x00, 0x7F, //7n - F,G,H,I,J,K,L,M,N,O,
+                  0x00, 0x00, 0x00, 0x6E, 0x1A, 0x00, 0x00, 0x79, 0x00, 0x1D, //8n - P,Q,R,S,T,U,V,W,X,Y,
+                  0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00, 0x74, 0x00, 0x34, //9n - Z,[,\,],^,_,`,a,b,c,
+                  0x75, 0x3F, 0x00, 0x00, 0x5C, 0x41, 0x00, 0x5D, 0x18, 0x54, //10n- d,e,f,g,h,i,j,k,l,m,
+                  0x54, 0x74, 0x00, 0x00, 0x14, 0x00, 0x3C, 0x83, 0x00, 0x00, //11n- n,o,p,q,r,s,t,u,v,w,
+                  0x00, 0x6D, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};            //12n- x,y,z,{,|,},~, ,
+const byte dispNums[] = {0x7B, 0x41, 0x37, 0x67, 0x4D, 0x6E, 0x7E, 0x43, 0x7F, 0x4F}; //0-9 on display
 const byte emptyDisplay[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 int menuChoices [3] = {0, 0, 0};
 int menuLevel = 0;
 int mainMenuEntryCount = 5;
 tmElements_t newTime;
-const byte mainMenuTexts[5][6] = {{0xBF, 0xBE, 0x17, 0xAE, 0x00, 0x00}, {0xBE, 0x06, 0x8B, 0x0A, 0x8A, dispNums[1]}, {0xBE, 0x06, 0x8B, 0x0A, 0x8A, dispNums[2]}, {0xBE, 0x06, 0x8B, 0x0A, 0x8A, dispNums[3]}, {0x16, 0x02, 0x8A, 0x1F, 0x00, 0x00}}; //Back, Alarm1-3, Time
-const byte timeSetTexts[6][6] = {{0xAD, 0x1F, 0x8B, 0x0A, 0x00, 0x00}, {0xB6, 0x8B, 0x8A, 0x0F, 0x00, 0x00}, {0xB7, 0x8B, 0xAD, 0x00, 0x00, 0x00}, {0xAE, 0x8B, 0x83, 0x0A, 0x00, 0x00}, {0xB6, 0x02, 0x8A, 0x00, 0x00, 0x00}, {0x9D, 0x1F, 0x17, 0x00, 0x00, 0x00}}; //Year00,Mont00,Day000,Hour00,Min000,Sec000
-const byte alarmSetTexts[4][6] = {{0xBE, 0x00, 0x00, 0x00, 0x00, 0x00}, {0xBF, 0xBE, 0x17, 0xAE, 0x00, 0x00}, {0x16, 0x02, 0x8A, 0x1F, 0x00, 0x00}, {0xB7, 0x8B, 0xA7, 0x1F, 0x1F, 0xAE}}; //Ax0[0on/off], Back, Time, DoW
-const byte weekDayTexts[8][6] = {{0x9D, 0x83, 0x8A, 0x00, 0x00, 0x00}, {0xB6, 0x8B, 0x8A, 0x00, 0x00, 0x00}, {0x16, 0x83, 0x1F, 0x00, 0x00, 0x00}, {0xA7, 0x1F, 0x8A, 0x00, 0x00, 0x00}, {0x16, 0x8E, 0x83, 0x00, 0x00, 0x00}, {0x16, 0x0A, 0x02, 0x00, 0x00, 0x00}, {0x9D, 0x8B, 0x0F, 0x00, 0x00, 0x00}, {0xBF, 0xBE, 0x17, 0xAE, 0x00, 0x00},}; //Sun,Mon.Tue,Wen,Thu,Fri,Sat,Sun, Back
+const byte mainMenuTexts[5][6] = {{c['B'], c['a'], c['c'], c['k'], 0x00, 0x00}, {c['A'], c['l'], c['a'], c['r'], c['m'], c[1]}, {c['A'], c['l'], c['a'], c['r'], c['m'], c[2]}, {c['A'], c['l'], c['a'], c['r'], c['m'], c[3]}, {c['T'], c['i'], c['m'], c['e'], 0x00, 0x00}}; //Back, Alarm1-3, Time
+const byte timeSetTexts[6][6] = {{c['Y'], c['e'], c['a'], c['r'], 0x00, 0x00}, {c['M'], c['o'], c['n'], c['t'] , 0x00, 0x00}, {c['D'], c['a'], c['y'], 0x00, 0x00, 0x00}, {c['H'], c['o'], c['u'], c['r'], 0x00, 0x00}, {c['M'], c['i'], c['n'], 0x00, 0x00, 0x00}, {c['S'], c['e'], c['c'], 0x00, 0x00, 0x00}}; //Year00,Mont00,Day000,Hour00,Min000,Sec000
+const byte alarmSetTexts[4][6] = {{c['A'], 0x00, 0x00, 0x00, 0x00, 0x00}, {c['B'], c['a'], c['c'], c['k'], 0x00, 0x00}, {c['T'], c['i'], c['m'], c['e'], 0x00, 0x00}, {c['D']|c['.'], c['o']|c['.'], c['W'], c['e'], c['e'], c['k']}}; //Ax0[0on/off], Back, Time, DoW
+const byte weekDayTexts[8][6] = {{c['S'], c['u'], c['n'], 0x00, 0x00, 0x00}, {c['M'], c['o'], c['n'], 0x00, 0x00, 0x00}, {c['T'], c['u'], c['e'], 0x00, 0x00, 0x00}, {c['W'], c['e'], c['d'], 0x00, 0x00, 0x00}, {c['T'], c['h'], c['u'], 0x00, 0x00, 0x00}, {c['F'], c['r'], c['i'], 0x00, 0x00, 0x00}, {c['S'], c['a'], c['t'], 0x00, 0x00, 0x00}, {c['B'], c['a'], c['c'], c['k'], 0x00, 0x00}}; //Sun,Mon,Tue,Wed,Thu,Fri,Sat, Back
 int alarmMenuEntryCount = 4;
 //This is not a state machine
 enum appState {TIME, DATE, ALARMDISPLAY, MENU, DEMO};
@@ -26,11 +39,13 @@ appState currentState = TIME;
 
 //Display control pins
 const int latchPin = A2; //ST_CP / rclk on shift register
-const int clockPin = A3; //SH_CP / srclk on shift register
-const int dataPin = A1; //DS / data on shift register
+const int clockPin = A1; //SH_CP / srclk on shift register
+const int dataPin = A3; //DS / data on shift register
 
 //Buzzer pin
-const int buzzerPin = 9;
+const int buzzerPin = 13;
+
+const int ldrPin = A0;
 
 //Buttons
 Button lButton(2);
@@ -61,8 +76,8 @@ byte targetDisplayData[6]; //What should be on the display. Used in future for a
 int displayBrightness = 10; //Val from 1-10.. More is more
 int totalDelayTime = 10; //Higher gives more brightness resultion, but more flashy
 
-const int analogBright = 600; //Analog value for a bright room. Experimentally chosen
-const int analogDark = 100; //Analog value for a dark room. Experimentally chosen
+const int analogBright = 900; //Analog value for a bright room. Experimentally chosen
+const int analogDark = 200; //Analog value for a dark room. Experimentally chosen
 int ambientBrightness = analogBright; //In which an averaged analog brightness value is stored
 
 void setup() {
@@ -158,7 +173,7 @@ void loop() {
     checkAlarms();
   }
   //Ambient brightness is read to a moving average
-  ambientBrightness = (ambientBrightness * 7 + analogRead(A0)) / 8;
+  ambientBrightness = (ambientBrightness * 7 + analogRead(ldrPin)) / 8;
   //Linearly map ambient brightness to display brightness
   displayBrightness = min(10, max(1, map(ambientBrightness, analogDark, analogBright, 1, 10)));
   //Push display, wait displaybrightness, push empty screen, wait rest of cycle. Practically software PWM...
@@ -166,6 +181,7 @@ void loop() {
   delay(displayBrightness);
   pushToDisplay(emptyDisplay);
   delay(totalDelayTime - displayBrightness);
+  //Serial.println(targetDisplayData[5]);
 }
 
 void initAlarms() {
@@ -349,12 +365,12 @@ void generateMenu() {
           //In menu option 0 alarm is either shown on or off. Clicking m button switches the alarm.
           displayBytes[1] = dispNums[menuChoices[0]];
           if (alarms[menuChoices[0] - 1].isEnabled()) {
-            displayBytes[4] = 0xB7; //O
-            displayBytes[5] = 0x8A; //n
+            displayBytes[4] = c['O'];
+            displayBytes[5] = c['n'];
           } else {
-            displayBytes[3] = 0xB7; //O
-            displayBytes[4] = 0x1E; //f
-            displayBytes[5] = 0x1E; //f
+            displayBytes[3] = c['O'];
+            displayBytes[4] = c['f'];
+            displayBytes[5] = c['f'];
           }
           if (mButton.pressed()) {
             alarms[menuChoices[0] - 1].toggleEnabled();
@@ -394,8 +410,8 @@ void generateMenu() {
             //Adjust hours
             if (second() % 2 == 0) {
               //Blink hour dots to show active
-              displayBytes[0] += dotVal;
-              displayBytes[1] += dotVal;
+              displayBytes[0] += c['.'];
+              displayBytes[1] += c['.'];
             }
             //Inc/dec set hour
             if (rButton.pressed()) {
@@ -408,8 +424,8 @@ void generateMenu() {
             //Adjust minutes
             if (second() % 2 == 0) {
               //Blink minute dots to show active
-              displayBytes[3] += dotVal;
-              displayBytes[4] += dotVal;
+              displayBytes[3] += c['.'];
+              displayBytes[4] += c['.'];
             }
             if (rButton.pressed()) {
               alarmMinuteToSet = modulo(alarmMinuteToSet + 1, 60);
@@ -435,12 +451,12 @@ void generateMenu() {
           }
           if (menuChoices[2] != 7) { //If on a weekday, show off or on
             if (alarms[menuChoices[0] - 1].firesOnWeekday(menuChoices[2] + 1)) {
-              displayBytes[4] = 0xB7; //O
-              displayBytes[5] = 0x8A; //n
+              displayBytes[4] = c['O']; //O
+              displayBytes[5] = c['n']; //n
             } else {
-              displayBytes[3] = 0xB7; //O
-              displayBytes[4] = 0x1E; //f
-              displayBytes[5] = 0x1E; //f
+              displayBytes[3] = c['O']; //O
+              displayBytes[4] = c['f']; //f
+              displayBytes[5] = c['f']; //f
             }
 
             if (mButton.pressed()) { //Switch day on/off
@@ -485,13 +501,13 @@ void displayTime() {
   if (displayElements[5] % 2 == 0) {
     //Only blink dots if alarm is on
     if (alarms[0].isEnabled()) {
-      displayBytes[1] += dotVal;
+      displayBytes[1] += c['.'];
     }
     if (alarms[1].isEnabled()) {
-      displayBytes[3] += dotVal;
+      displayBytes[3] += c['.'];
     }
     if (alarms[2].isEnabled()) {
-      displayBytes[5] += dotVal;
+      displayBytes[5] += c['.'];
     }
   }
 
@@ -518,7 +534,7 @@ void displayDate() {
   }
 
   for (int i = 0; i < weekday() - 1; i++) {
-    displayBytes[i] += dotVal;
+    displayBytes[i] += c['.'];
   }
   setTargetDisplayData(displayBytes);
 }
@@ -551,11 +567,11 @@ void displayAlarm(int alarmNumber) {
 
   //Add dots for days active. Sunday is a line.
   if (alarms[alarmNumber].firesOnWeekday(1)) {
-    displayBytes[0] += 0x01;
+    displayBytes[0] += c['_'];
   }
   for (int i = 0; i < 6; i++) {
     if (alarms[alarmNumber].firesOnWeekday(i + 2)) {
-      displayBytes[i] += dotVal;
+      displayBytes[i] += c['.'];
     }
   }
   //Light up segments on display 0 to show what alarm is displayed
@@ -637,4 +653,3 @@ int modulo(int dividend, int divisor) {
   }
   return dividend % divisor;
 }
-
