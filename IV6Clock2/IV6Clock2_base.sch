@@ -163,9 +163,9 @@ Text GLabel 2200 3900 2    50   BiDi ~ 0
 SDA
 Text GLabel 2200 4000 2    50   BiDi ~ 0
 SCL
-Text GLabel 2200 2700 2    50   Input ~ 0
+Text GLabel 2200 3500 2    50   Input ~ 0
 LDR
-Text GLabel 2200 3500 2    50   Output ~ 0
+Text GLabel 2200 3100 2    50   Output ~ 0
 BUZ
 $Comp
 L Regulator_Switching:TLV62568DBV U3
@@ -1071,12 +1071,12 @@ VBAT
 $Comp
 L Connector_Generic:Conn_01x04 J5
 U 1 1 5F22E5EE
-P 2400 2900
-F 0 "J5" H 2480 2892 50  0000 L CNN
-F 1 "Conn_01x04" H 2480 2801 50  0000 L CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 2400 2900 50  0001 C CNN
-F 3 "~" H 2400 2900 50  0001 C CNN
-	1    2400 2900
+P 2400 2800
+F 0 "J5" H 2480 2792 50  0000 L CNN
+F 1 "Conn_01x04" H 2480 2701 50  0000 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 2400 2800 50  0001 C CNN
+F 3 "~" H 2400 2800 50  0001 C CNN
+	1    2400 2800
 	1    0    0    -1  
 $EndComp
 Text Notes 3100 7400 0    50   ~ 0
