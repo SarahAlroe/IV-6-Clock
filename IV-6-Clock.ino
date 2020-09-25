@@ -12,14 +12,14 @@ const byte c[] = {0x7B, 0x41, 0x37, 0x67, 0x4D, 0x6E, 0x7E, 0x43, 0x7F, 0x4F, //
                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //1n -  , , , , , , , , , ,
                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //2n -  , , , , , , , , , ,
                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //3n -  , , ,!,",#,$,%,&,',
-                  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x7B, 0x41, //4n - (,),*,+,,,-,.,/,0,1,
+                  0x00, 0x00, 0x0F, 0x00, 0x00, 0x04, 0x80, 0x00, 0x7B, 0x41, //4n - (,),*,+,,,-,.,/,0,1,
                   0x37, 0x67, 0x4D, 0x6E, 0x7E, 0x43, 0x7F, 0x4F, 0x00, 0x00, //5n - 2,3,4,5,6,7,8,9,:,;,
                   0x00, 0x00, 0x00, 0x00, 0x00, 0x5F, 0x7F, 0x00, 0x7B, 0x00, //6n - <,=,>,?,@,A,B,C,D,E,
-                  0x1E, 0x00, 0x5D, 0x00, 0x00, 0x00, 0x00, 0x5B, 0x00, 0x7F, //7n - F,G,H,I,J,K,L,M,N,O,
+                  0x1E, 0x00, 0x5D, 0x00, 0x00, 0x00, 0x00, 0x5B, 0x00, 0x7B, //7n - F,G,H,I,J,K,L,M,N,O,
                   0x00, 0x00, 0x00, 0x6E, 0x1A, 0x00, 0x00, 0x79, 0x00, 0x1D, //8n - P,Q,R,S,T,U,V,W,X,Y,
-                  0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00, 0x74, 0x00, 0x34, //9n - Z,[,\,],^,_,`,a,b,c,
-                  0x75, 0x3F, 0x00, 0x00, 0x5C, 0x41, 0x00, 0x5D, 0x18, 0x54, //10n- d,e,f,g,h,i,j,k,l,m,
-                  0x54, 0x74, 0x00, 0x00, 0x14, 0x00, 0x3C, 0x83, 0x00, 0x00, //11n- n,o,p,q,r,s,t,u,v,w,
+                  0x00, 0x00, 0x00, 0x00, 0x0B, 0x20, 0x00, 0x74, 0x00, 0x34, //9n - Z,[,\,],^,_,`,a,b,c,
+                  0x75, 0x3F, 0x1E, 0x00, 0x5C, 0x41, 0x00, 0x5D, 0x18, 0x54, //10n- d,e,f,g,h,i,j,k,l,m,
+                  0x54, 0x74, 0x00, 0x00, 0x14, 0x00, 0x3C, 0x70, 0x00, 0x00, //11n- n,o,p,q,r,s,t,u,v,w,
                   0x00, 0x6D, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};            //12n- x,y,z,{,|,},~, ,
 const byte dispNums[] = {0x7B, 0x41, 0x37, 0x67, 0x4D, 0x6E, 0x7E, 0x43, 0x7F, 0x4F}; //0-9 on display
 const byte emptyDisplay[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -539,47 +539,35 @@ void displayDate() {
   setTargetDisplayData(displayBytes);
 }
 void displayAlarm(int alarmNumber) {
-  char displayElements[6];
   byte displayBytes[6];
 
-  //Hours
-  displayElements[1] = alarms[alarmNumber].hourToFire() / 10;
-  displayElements[2] = alarms[alarmNumber].hourToFire() - displayElements[1] * 10;
-
-  //Minutes
-  displayElements[3] = alarms[alarmNumber].minuteToFire() / 10;
-  displayElements[4] = alarms[alarmNumber].minuteToFire() - displayElements[3] * 10;
-
-  //Convert numbers to bytes for display
-  for (int i = 0; i < 6; i++) {
-    displayBytes[i] = dispNums[displayElements[i]];
-  }
-
+  displayBytes[0] = c[alarmNumber + 1];
 
   //On / off
   if (alarms[alarmNumber].isEnabled()) {
-    displayBytes[5] = 0xA0;
+    displayBytes[1] = c['^'];
   } else {
-    displayBytes[5] = 0x10;
+    displayBytes[1] = c['-'];
   }
-  //First and lastdisplay manually set
-  displayBytes[0] = 0;
 
-  //Add dots for days active. Sunday is a line.
+  //Hours
+  displayBytes[2] = c[alarms[alarmNumber].hourToFire() / 10];
+  displayBytes[3] = c[alarms[alarmNumber].hourToFire() % 10];
+
+  //Minutes
+  displayBytes[4] = c[alarms[alarmNumber].minuteToFire() / 10];
+  displayBytes[5] = c[alarms[alarmNumber].minuteToFire() % 10];
+
+  //Add dots for days active. Monday is a line.
   if (alarms[alarmNumber].firesOnWeekday(1)) {
-    displayBytes[0] += c['_'];
+    displayBytes[0] += c['.'];
   }
-  for (int i = 0; i < 6; i++) {
-    if (alarms[alarmNumber].firesOnWeekday(i + 2)) {
-      displayBytes[i] += c['.'];
-    }
+  if (alarms[alarmNumber].firesOnWeekday(2)) {
+    displayBytes[1] += c['_'];
   }
-  //Light up segments on display 0 to show what alarm is displayed
-  displayBytes[0] += 0x04;
-  if (alarmNumber > 0) {
-    displayBytes[0] += 0x10;
-    if (alarmNumber > 1) {
-      displayBytes[0] += 0x20;
+  for (int i = 3; i <= 7; i++) {
+    if (alarms[alarmNumber].firesOnWeekday(i)) {
+      displayBytes[i - 2] += c['.'];
     }
   }
 
@@ -591,15 +579,20 @@ void displayDemo() {
   //Demo thingy, blinks screeen on/off every second
   byte displayBytes[6];
 
-  if (second() % 2 == 0) {
-    for (int i = 0; i < 6; i++) {
-      displayBytes[i] = 0xFF;
-      displayBrightness = random(1, 10);
-    }
+  if (second() < 30) {
+    displayBytes[0] = c[' '];
+    displayBytes[1] = c[' '];
+    displayBytes[2] = c['S'];
+    displayBytes[3] = c['F'];
+    displayBytes[4] = c['A'];
+    displayBytes[5] = c[' '];
   } else {
-    for (int i = 0; i < 6; i++) {
-      displayBytes[i] = 0x00;
-    }
+    displayBytes[0] = c[' '];
+    displayBytes[1] = c[2];
+    displayBytes[2] = c[0];
+    displayBytes[3] = c[2];
+    displayBytes[4] = c[0];
+    displayBytes[5] = c[' '];
   }
   setTargetDisplayData(displayBytes);
 }
