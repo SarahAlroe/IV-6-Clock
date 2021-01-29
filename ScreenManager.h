@@ -11,10 +11,11 @@ class SetAlarmScreen;
 class ScreenManager {
   public:
     ScreenManager();
-    ~ScreenManager();
-    Screen * getCurrentScreen();
+
     void setCurrentScreen(Screen * newScreen);
-    
+
+    Screen * getCurrentScreen();
+
     TimeScreen * timeScreen;
     DateScreen * dateScreen;
     AlarmScreen * alarmScreen;
@@ -23,6 +24,7 @@ class ScreenManager {
     SetAlarmScreen * setAlarmScreen1;
     SetAlarmScreen * setAlarmScreen2;
     SetAlarmScreen * setAlarmScreen3;
+
   private:
     Screen *currentScreen;
 };

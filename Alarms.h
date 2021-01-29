@@ -5,17 +5,21 @@
 class Alarms {
   public:
     static Alarms *getInstance();
-    Alarm * get(int i);
+    static const int NUM_ALARMS = 3;
+
     void load();
     void save();
-    bool isActive();
     void stop();
-    static const int NUM_ALARMS = 3;
+
+    Alarm * get(int i);
+    bool isActive();
+
   private:
-    static Alarms *instance;
     Alarms();
-    Alarm alarms[NUM_ALARMS] = {Alarm(), Alarm(), Alarm()};
+    static Alarms *instance;
     const int alarmAddress [NUM_ALARMS] = {20, 21 + sizeof(alarms[0]), 22 + 2 * sizeof(alarms[0])};
+
+    Alarm alarms[NUM_ALARMS] = {Alarm(), Alarm(), Alarm()};
     int lastMinute;
     bool alarmIsOn = false;
 };

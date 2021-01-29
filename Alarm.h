@@ -1,4 +1,5 @@
 #pragma once
+
 class Alarm {
   public:
     Alarm();
@@ -17,7 +18,6 @@ class Alarm {
     bool firesOnWeekday(int testWeekday);
     int hourToFire();
     int minuteToFire();
-
     bool firesOn(int testWeekday, int testHour, int testMinute);
 
   private:

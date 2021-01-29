@@ -8,7 +8,7 @@ int modulo(int dividend, int lowerClamp, int divisor) {
   dividend -= lowerClamp;
   divisor -= lowerClamp;
   while (dividend < 0) {
-    dividend = dividend + divisor; //Wrap around to always get positive number
+    dividend = dividend + divisor; // Wrap around to always get positive number
   }
   return (dividend % divisor) + lowerClamp;
 }
@@ -19,51 +19,49 @@ int modulo(int dividend, int divisor) {
 
 // TimeScreen
 
-TimeScreen :: TimeScreen(ScreenManager *sm) {
+TimeScreen::TimeScreen(ScreenManager *sm) {
   this->sm = sm;
 }
 
-void TimeScreen :: init() {
+void TimeScreen::init() {
 }
 
-void TimeScreen :: leftButtonPressed() {
+void TimeScreen::leftButtonPressed() {
   sm->setCurrentScreen(sm->dateScreen);
 }
 
-void TimeScreen :: middleButtonPressed() {
+void TimeScreen::middleButtonPressed() {
   sm->setCurrentScreen(sm->mainMenuScreen);
 }
 
-void TimeScreen :: rightButtonPressed() {
+void TimeScreen::rightButtonPressed() {
   sm->setCurrentScreen(sm->alarmScreen);
 }
 
-struct DisplayData TimeScreen :: getDisplay() {
-  //Display RTC Time
+struct DisplayData TimeScreen::getDisplay() {
   char displayElements[6];
   struct DisplayData displayData;
 
-  //Hour
-  displayElements[0] = hour() / 10; //Get the tens - int division is always floored
-  displayElements[1] = hour() - displayElements[0] * 10; //Get ones - just get rid of the tens
+  // Hour
+  displayElements[0] = hour() / 10; // Get the tens - int division is always floored
+  displayElements[1] = hour() - displayElements[0] * 10; // Get ones - just get rid of the tens
 
-  //Minute
+  // Minute
   displayElements[2] = minute() / 10;
   displayElements[3] = minute() - displayElements[2] * 10;
 
-  //Second
+  // Second
   displayElements[4] = second() / 10;
   displayElements[5] = second() - displayElements[4] * 10;
 
-  //Convert numbers to bytes for display
+  // Convert numbers to bytes for display
   for (int i = 0; i < 6; i++) {
     displayData.d[i] = c[displayElements[i]];
   }
 
-  //Every other second, blink the dots between hours, minutes and seconds
+  // Every other second, blink the dots between hours, minutes and seconds if their alarm is on
   Alarms * alarms = alarms->getInstance();
   if (second() % 2 == 0) {
-    //Only blink dots if alarm is on
     if (alarms->get(0)->isEnabled()) {
       displayData.d[1] += c['.'];
     }
@@ -79,107 +77,115 @@ struct DisplayData TimeScreen :: getDisplay() {
 
 // DateScreen
 
-DateScreen :: DateScreen(ScreenManager *sm) {
+DateScreen::DateScreen(ScreenManager *sm) {
   this->sm = sm;
 }
-void DateScreen :: init() {
+
+void DateScreen::init() {
   initTimestamp = now();
 }
 
-void DateScreen :: leftButtonPressed() {
+void DateScreen::leftButtonPressed() {
   sm->setCurrentScreen(sm->timeScreen);
 }
 
-void DateScreen :: middleButtonPressed() {
+void DateScreen::middleButtonPressed() {
   sm->setCurrentScreen(sm->timeScreen);
 }
 
-void DateScreen :: rightButtonPressed() {
+void DateScreen::rightButtonPressed() {
   sm->setCurrentScreen(sm->alarmScreen);
 }
 
-struct DisplayData DateScreen :: getDisplay()  {
+struct DisplayData DateScreen::getDisplay()  {
   // Handle screen timeout
   if (initTimestamp + SCREEN_STAY_SECONDS < now()) {
     sm->setCurrentScreen(sm->timeScreen);
   }
-  // Display RTC Time
+
   char displayElements[6];
   struct DisplayData displayData;
 
-  displayElements[0] = (year() - 2000) / 10; //Remove digits 3+4. Get the tens - int division is always floored
-  displayElements[1] = (year() - 2000) - displayElements[0] * 10; //Get ones - just get rid of the tens
+  // Year
+  displayElements[0] = (year() - 2000) / 10; // Remove digits 3+4. Get the tens - int division is always floored
+  displayElements[1] = (year() - 2000) - displayElements[0] * 10; // Get ones - just get rid of the tens
 
-  //Minute
+  // Month
   displayElements[2] = month() / 10;
   displayElements[3] = month() - displayElements[2] * 10;
 
-  //Second
+  // Day
   displayElements[4] = day() / 10;
   displayElements[5] = day() - displayElements[4] * 10;
 
+  // Convert numbers to bytes for display
   for (int i = 0; i < 6; i++) {
     displayData.d[i] = dispNums[displayElements[i]];
   }
 
+  // Add a dot to the display for each day of the week passed. Sunday is 0 dots.
   for (int i = 0; i < weekday() - 1; i++) {
     displayData.d[i] += c['.'];
   }
+
   return displayData;
 }
 
 // AlarmScreen
 
-AlarmScreen :: AlarmScreen(ScreenManager *sm) {
+AlarmScreen::AlarmScreen(ScreenManager *sm) {
   this->sm = sm;
 }
-void AlarmScreen :: init() {
+
+void AlarmScreen::init() {
   initTimestamp = now();
 }
 
-void AlarmScreen :: leftButtonPressed() {
+void AlarmScreen::leftButtonPressed() {
   sm->setCurrentScreen(sm->dateScreen);
 }
 
-void AlarmScreen :: middleButtonPressed() {
+void AlarmScreen::middleButtonPressed() {
   sm->setCurrentScreen(sm->timeScreen);
 }
 
-void AlarmScreen :: rightButtonPressed() {
+void AlarmScreen::rightButtonPressed() {
   sm->setCurrentScreen(sm->timeScreen);
 }
 
-struct DisplayData AlarmScreen :: getDisplay()  {
-  // Handle screen timeout
+struct DisplayData AlarmScreen::getDisplay()  {
   struct DisplayData displayData;
   Alarms * alarms = alarms->getInstance();
-
+  
+  // Handle screen timeout
   if (initTimestamp + ALARM_SHOW_TIME * alarms->NUM_ALARMS < now()) {
     sm->setCurrentScreen(sm->timeScreen);
   }
 
+  // Dedicate equal amounts of the alarm screen show time to each alarm
   int alarmNumber = min((now() - initTimestamp) / ALARM_SHOW_TIME, 2);
 
+  // Alarm number on first digit
   displayData.d[0] = c[alarmNumber + 1];
 
   Alarm * currentAlarm = alarms->get(alarmNumber);
 
-  //On / off
+  // On / off on second digit
   if (currentAlarm->isEnabled()) {
     displayData.d[1] = c['^'];
   } else {
     displayData.d[1] = c['-'];
   }
 
-  //Hours
+  // Hours on third and fourth digit
   displayData.d[2] = c[currentAlarm->hourToFire() / 10];
   displayData.d[3] = c[currentAlarm->hourToFire() % 10];
 
-  //Minutes
+  // Minutes on fifth and sixth digit
   displayData.d[4] = c[currentAlarm->minuteToFire() / 10];
   displayData.d[5] = c[currentAlarm->minuteToFire() % 10];
 
-  //Add dots for days active. Monday is a line.
+  // Add dots for days active. Monday is a line on second digit
   if (currentAlarm->firesOnWeekday(1)) {
     displayData.d[0] += c['.'];
   }
@@ -196,21 +202,22 @@ struct DisplayData AlarmScreen :: getDisplay()  {
 
 // MainMenuScreen
 
-MainMenuScreen :: MainMenuScreen(ScreenManager *sm) {
+MainMenuScreen::MainMenuScreen(ScreenManager *sm) {
   this->sm = sm;
 }
-void MainMenuScreen :: init() {
+
+void MainMenuScreen::init() {
 }
 
-void MainMenuScreen :: leftButtonPressed() {
+void MainMenuScreen::leftButtonPressed() {
   menuIndex = modulo(menuIndex - 1, MENU_ENTRY_COUNT);
 }
 
-void MainMenuScreen :: rightButtonPressed() {
+void MainMenuScreen::rightButtonPressed() {
   menuIndex = modulo(menuIndex + 1, MENU_ENTRY_COUNT);
 }
 
-void MainMenuScreen :: middleButtonPressed() {
+void MainMenuScreen::middleButtonPressed() {
   switch (menuIndex) {
     case BACK:
       sm->setCurrentScreen(sm->timeScreen);
@@ -230,29 +237,31 @@ void MainMenuScreen :: middleButtonPressed() {
   }
 }
 
-struct DisplayData MainMenuScreen :: getDisplay()  {
+struct DisplayData MainMenuScreen::getDisplay()  {
   return menuText[menuIndex];
 }
 
 // SetTimeScreen
 
-SetTimeScreen :: SetTimeScreen(ScreenManager *sm) {
+SetTimeScreen::SetTimeScreen(ScreenManager *sm) {
   this->sm = sm;
 }
-void SetTimeScreen :: init() {
+
+void SetTimeScreen::init() {
   menuIndex = 0;
   currentMenuValue = year() - 2000;
 }
 
-void SetTimeScreen :: leftButtonPressed() {
+void SetTimeScreen::leftButtonPressed() {
   currentMenuValue = modulo(currentMenuValue - 1, getLowerClamp(), getUpperClamp());
 }
 
-void SetTimeScreen :: rightButtonPressed() {
+void SetTimeScreen::rightButtonPressed() {
   currentMenuValue = modulo(currentMenuValue + 1, getLowerClamp(), getUpperClamp());
 }
 
-void SetTimeScreen :: middleButtonPressed() {
+void SetTimeScreen::middleButtonPressed() {
+  // Cycle through each value to set, loading in the existing value each time.
   switch (menuIndex) {
     case YEAR:
       newTime.Year = y2kYearToTm(currentMenuValue);
@@ -277,9 +286,9 @@ void SetTimeScreen :: middleButtonPressed() {
     case SECOND:
       newTime.Second = currentMenuValue;
 
-      //Make time_t object from new time values
+      // Make time_t object from new time values
       time_t t = makeTime(newTime);
-      //Set time locally and on RTC
+      // Set time locally and on RTC
       RTC.set(t);
       setTime(t);
 
@@ -289,14 +298,14 @@ void SetTimeScreen :: middleButtonPressed() {
   menuIndex ++;
 }
 
-struct DisplayData SetTimeScreen :: getDisplay()  {
+struct DisplayData SetTimeScreen::getDisplay()  {
   struct DisplayData displayData = menuText[menuIndex];
   displayData.d[4] = c[currentMenuValue / 10];
   displayData.d[5] = c[currentMenuValue - ((currentMenuValue / 10) * 10)];
   return displayData;
 }
 
-int SetTimeScreen :: getUpperClamp() {
+int SetTimeScreen::getUpperClamp() {
   switch (menuIndex) {
     case YEAR:
       return 100;
@@ -313,7 +322,7 @@ int SetTimeScreen :: getUpperClamp() {
   }
 }
 
-int SetTimeScreen :: getLowerClamp() {
+int SetTimeScreen::getLowerClamp() {
   switch (menuIndex) {
     case YEAR:
       return 0;
@@ -329,17 +338,18 @@ int SetTimeScreen :: getLowerClamp() {
       return 0;
   }
 }
+
 // SetAlarmScreen
 
-SetAlarmScreen :: SetAlarmScreen(ScreenManager *sm, int alarmNumber) {
+SetAlarmScreen::SetAlarmScreen(ScreenManager *sm, int alarmNumber) {
   this->sm = sm;
   this->alarmNumber = alarmNumber;
 }
-void SetAlarmScreen :: init() {
+void SetAlarmScreen::init() {
   menuIndex = 0;
 }
 
-void SetAlarmScreen :: leftButtonPressed() {
+void SetAlarmScreen::leftButtonPressed() {
   if (! inSubmenu) {
     menuIndex = modulo(menuIndex - 1, MENU_ENTRY_COUNT);
   } else {
@@ -357,7 +367,7 @@ void SetAlarmScreen :: leftButtonPressed() {
   }
 }
 
-void SetAlarmScreen :: rightButtonPressed() {
+void SetAlarmScreen::rightButtonPressed() {
   if (! inSubmenu) {
     menuIndex = modulo(menuIndex + 1, MENU_ENTRY_COUNT);
   } else {
@@ -375,7 +385,7 @@ void SetAlarmScreen :: rightButtonPressed() {
   }
 }
 
-void SetAlarmScreen :: middleButtonPressed() {
+void SetAlarmScreen::middleButtonPressed() {
   Alarms * alarms = alarms->getInstance();
   Alarm * currentAlarm = alarms->get(alarmNumber);
 
@@ -410,7 +420,7 @@ void SetAlarmScreen :: middleButtonPressed() {
   }
 }
 
-struct DisplayData SetAlarmScreen :: getDisplay()  {
+struct DisplayData SetAlarmScreen::getDisplay()  {
   Alarms * alarms = alarms->getInstance();
   Alarm * currentAlarm = alarms->get(alarmNumber);
 

@@ -8,61 +8,63 @@
 #include "Screen.h"
 #include "Buzzer.h"
 
-//Display control pins
-const int latchPin = A2; //ST_CP / rclk on shift register
-const int clockPin = A1; //SH_CP / srclk on shift register
-const int dataPin = A3; //DS / data on shift register
+// Pin configuration
+const int latchPin = A2;  // ST_CP / rclk on shift register
+const int clockPin = A1;  // SH_CP / srclk on shift register
+const int dataPin = A3;   // DS / data on shift register
+const int ldrPin = A0;    // LDR pin
+const int buzzerPin = 13; // Buzzer pin
+const int lButtonPin = 2; // Left button pin
+const int mButtonPin = 3; // Middle button pin
+const int rButtonPin = 4; // Right button pin
 
-//LDR pin
-const int ldrPin = A0;
-
-//Buzzer pin
-const int buzzerPin = 13;
-
-//Display
+// Display
 Display display(dataPin, clockPin, latchPin, ldrPin);
+
+// Buzzer
+Buzzer buzzer(buzzerPin);
+
+// Buttons
+Button lButton(lButtonPin);
+Button mButton(mButtonPin);
+Button rButton(rButtonPin);
 
 // Screens
 ScreenManager screenManager;
 
-//Buttons
-Button lButton(2);
-Button mButton(3);
-Button rButton(4);
-
-//Alarms
+// Alarms
 Alarms * alarms;
 
-//Buzzer
-Buzzer buzzer(buzzerPin);
-
 void setup() {
-  //Init clock
+  // Init clock
   setSyncProvider(RTC.get);
 
-  //Init buttons
+  // Init buttons
   lButton.begin();
   mButton.begin();
   rButton.begin();
 
-  //Init serial
+  // Init serial
   Serial.begin(9600);
 
-  //Init alarms
+  // Init alarms
   alarms = alarms->getInstance();
 }
 
 void loop() {
-  if (alarms -> isActive()){
+  // Check alarms
+  if (alarms -> isActive()) {
     buzzer.playAlarm();
     if (mButton.pressed()) {
       alarms -> stop();
       buzzer.stopAlarm();
     }
   }
-  
+
+  // Get screen to process input and be displayed
   Screen *currentScreen = screenManager.getCurrentScreen();
-  
+
+  // Handle input
   if (lButton.pressed()) {
     currentScreen->leftButtonPressed();
   }
@@ -73,18 +75,20 @@ void loop() {
     currentScreen->middleButtonPressed();
   }
 
+  // Update display
   display.display(currentScreen->getDisplay());
-  
+
   //Check if there's anything on the serial port
   checkSerialUpdate();
 }
 
 void checkSerialUpdate() {
-  //Check if new time has been pushed over serial (in format yy,m,d,h,m,s)
+  // Check if new time has been pushed over serial (in format yy,m,d,h,m,s)
   if (Serial.available() != 0) {
     time_t t;
     tmElements_t tm;
-    //Parse new datetime. Convert year from double digit to since 1970
+    
+    // Parse new datetime. Convert year from double digit to since 1970
     int y = Serial.parseInt();
     tm.Year = y2kYearToTm(y);
     tm.Month = Serial.parseInt();
@@ -92,9 +96,11 @@ void checkSerialUpdate() {
     tm.Hour = Serial.parseInt();
     tm.Minute = Serial.parseInt();
     tm.Second = Serial.parseInt();
-    //Convert to time_t object
+    
+    // Convert to time_t object
     t = makeTime(tm);
-    //Set RTC and locally kept time
+    
+    // Set RTC and locally kept time
     RTC.set(t);
     setTime(t);
 
