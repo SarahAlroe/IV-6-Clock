@@ -1,6 +1,6 @@
 #include <DS3232RTC.h>
 #include "Structure.h"
-#include <Button.h>
+#include "Button.h"
 #include "Alarm.h"
 #include "Alarms.h"
 #include "Display.h"
@@ -9,25 +9,26 @@
 #include "Buzzer.h"
 
 // Pin configuration
-const int latchPin = A2;  // ST_CP / rclk on shift register
-const int clockPin = A1;  // SH_CP / srclk on shift register
-const int dataPin = A3;   // DS / data on shift register
-const int ldrPin = A0;    // LDR pin
-const int buzzerPin = 13; // Buzzer pin
-const int lButtonPin = 2; // Left button pin
-const int mButtonPin = 3; // Middle button pin
-const int rButtonPin = 4; // Right button pin
+const int LATCH_PIN = A2;  // ST_CP / rclk on shift register
+const int CLOCK_PIN = A1;  // SH_CP / srclk on shift register
+const int DATA_PIN = A3;   // DS / data on shift register
+const int LDR_PIN = A0;    // LDR pin
+const int BUZZER_PIN = 13; // Buzzer pin
+const int L_BUTTON_PIN = 2; // Left button pin
+const int M_BUTTON_PIN = 3; // Middle button pin
+const int R_BUTTON_PIN = 4; // Right button pin
+const uint16_t DEBOUNCE_MS = 50;
 
 // Display
-Display display(dataPin, clockPin, latchPin, ldrPin);
+Display display(DATA_PIN, CLOCK_PIN, LATCH_PIN, LDR_PIN);
 
 // Buzzer
-Buzzer buzzer(buzzerPin);
+Buzzer buzzer(BUZZER_PIN);
 
 // Buttons
-Button lButton(lButtonPin);
-Button mButton(mButtonPin);
-Button rButton(rButtonPin);
+Button lButton(L_BUTTON_PIN);
+Button mButton(M_BUTTON_PIN);
+Button rButton(R_BUTTON_PIN);
 
 // Screens
 ScreenManager screenManager;
@@ -38,11 +39,6 @@ Alarms * alarms;
 void setup() {
   // Init clock
   setSyncProvider(RTC.get);
-
-  // Init buttons
-  lButton.begin();
-  mButton.begin();
-  rButton.begin();
 
   // Init serial
   Serial.begin(9600);

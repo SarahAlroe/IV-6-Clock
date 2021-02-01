@@ -4,6 +4,7 @@
 ScreenManager::ScreenManager() {
   timeScreen = new TimeScreen(this);
   dateScreen = new DateScreen(this);
+  temperatureScreen = new TemperatureScreen(this);
   alarmScreen = new AlarmScreen(this);
   mainMenuScreen = new MainMenuScreen(this);
   setTimeScreen = new SetTimeScreen(this);

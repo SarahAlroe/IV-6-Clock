@@ -3,6 +3,7 @@
 #include <DS3232RTC.h>
 #include "Alarm.h"
 #include "Alarms.h"
+#include "Config.h"
 
 int modulo(int dividend, int lowerClamp, int divisor) {
   dividend -= lowerClamp;
@@ -86,15 +87,15 @@ void DateScreen::init() {
 }
 
 void DateScreen::leftButtonPressed() {
-  sm->setCurrentScreen(sm->timeScreen);
+  sm->setCurrentScreen(sm->temperatureScreen);
 }
 
 void DateScreen::middleButtonPressed() {
-  sm->setCurrentScreen(sm->timeScreen);
+  sm->setCurrentScreen(sm->mainMenuScreen);
 }
 
 void DateScreen::rightButtonPressed() {
-  sm->setCurrentScreen(sm->alarmScreen);
+  sm->setCurrentScreen(sm->timeScreen);
 }
 
 struct DisplayData DateScreen::getDisplay()  {
@@ -142,21 +143,21 @@ void AlarmScreen::init() {
 }
 
 void AlarmScreen::leftButtonPressed() {
-  sm->setCurrentScreen(sm->dateScreen);
+  sm->setCurrentScreen(sm->timeScreen);
 }
 
 void AlarmScreen::middleButtonPressed() {
-  sm->setCurrentScreen(sm->timeScreen);
+  sm->setCurrentScreen(sm->mainMenuScreen);
 }
 
 void AlarmScreen::rightButtonPressed() {
-  sm->setCurrentScreen(sm->timeScreen);
+  sm->setCurrentScreen(sm->temperatureScreen);
 }
 
 struct DisplayData AlarmScreen::getDisplay()  {
   struct DisplayData displayData;
   Alarms * alarms = alarms->getInstance();
-  
+
   // Handle screen timeout
   if (initTimestamp + ALARM_SHOW_TIME * alarms->NUM_ALARMS < now()) {
     sm->setCurrentScreen(sm->timeScreen);
@@ -200,6 +201,72 @@ struct DisplayData AlarmScreen::getDisplay()  {
   return displayData;
 }
 
+// TemperatureScreen
+
+TemperatureScreen::TemperatureScreen(ScreenManager *sm) {
+  this->sm = sm;
+}
+
+void TemperatureScreen::init() {
+  initTimestamp = now();
+}
+
+void TemperatureScreen::leftButtonPressed() {
+  sm->setCurrentScreen(sm->alarmScreen);
+}
+
+void TemperatureScreen::middleButtonPressed() {
+  sm->setCurrentScreen(sm->mainMenuScreen);
+}
+
+void TemperatureScreen::rightButtonPressed() {
+  sm->setCurrentScreen(sm->dateScreen);
+}
+
+int countDigits(int number) {
+  int count = 0;
+  while (number != 0) {
+    number = number / 10;
+    count++;
+  }
+  return count;
+}
+
+struct DisplayData TemperatureScreen::getDisplay()  {
+  // Handle screen timeout
+  if (initTimestamp + SCREEN_STAY_SECONDS < now()) {
+    sm->setCurrentScreen(sm->timeScreen);
+  }
+  Config * config = config -> getInstance();
+
+  struct DisplayData displayData = {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}};
+  float temp = RTC.temperature() + TEMP_OFFSET;
+  switch (config->getTempUnit()) {
+    case 'C':
+      temp = temp / 4.0;
+      displayData.d[4] = c['*'];
+      displayData.d[5] = c['C'];
+      break;
+    case 'K':
+      temp = temp / 4.0 + 273.15;
+      displayData.d[5] = c['K'];
+      break;
+    case 'F':
+      temp = temp * 9.0 / 5.0 + 32.0;
+      displayData.d[4] = c['*'];
+      displayData.d[5] = c['F'];
+      break;
+  }
+  int tempInt = (int)(temp * 10.0);
+  int tempDigits = countDigits(tempInt);
+  for (int i = 0; i < tempDigits; i++) {
+    displayData.d[i] = c[(tempInt / (int)pow(10, tempDigits - i - 1)) % 10];
+  }
+  displayData.d[tempDigits - 2] += c['.'];
+
+  return displayData;
+}
+
 // MainMenuScreen
 
 MainMenuScreen::MainMenuScreen(ScreenManager *sm) {
@@ -207,19 +274,24 @@ MainMenuScreen::MainMenuScreen(ScreenManager *sm) {
 }
 
 void MainMenuScreen::init() {
+  lastChangeTimestamp = now();
 }
 
 void MainMenuScreen::leftButtonPressed() {
+  lastChangeTimestamp = now();
   menuIndex = modulo(menuIndex - 1, MENU_ENTRY_COUNT);
 }
 
 void MainMenuScreen::rightButtonPressed() {
+  lastChangeTimestamp = now();
   menuIndex = modulo(menuIndex + 1, MENU_ENTRY_COUNT);
 }
 
 void MainMenuScreen::middleButtonPressed() {
+  Config * config = config -> getInstance();
   switch (menuIndex) {
     case BACK:
+      config -> save();
       sm->setCurrentScreen(sm->timeScreen);
       break;
     case ALARM1:
@@ -234,11 +306,36 @@ void MainMenuScreen::middleButtonPressed() {
     case SET_TIME:
       sm->setCurrentScreen(sm->setTimeScreen);
       break;
+    case SUMMER_TIME:
+      config -> toggleSummerTime();
+      break;
+    case TEMP_UNIT:
+      config -> toggleTempUnit();
+      break;
   }
+  lastChangeTimestamp = now();
 }
 
 struct DisplayData MainMenuScreen::getDisplay()  {
-  return menuText[menuIndex];
+  // Handle screen timeout
+  if (lastChangeTimestamp + SCREEN_STAY_SECONDS < now()) {
+    sm->setCurrentScreen(sm->timeScreen);
+  }
+  Config * config = config -> getInstance();
+  struct DisplayData displayData = menuText[menuIndex];
+  if (menuIndex == SUMMER_TIME) {
+    if (config->isSummerTime()) {
+      displayData.d[4] = c['O'];
+      displayData.d[5] = c['n'];
+    } else {
+      displayData.d[3] = c['O'];
+      displayData.d[4] = c['f'];
+      displayData.d[5] = c['f'];
+    }
+  } else if (menuIndex == TEMP_UNIT) {
+    displayData.d[5] = c[config->getTempUnit()];
+  }
+  return displayData;
 }
 
 // SetTimeScreen
@@ -248,19 +345,23 @@ SetTimeScreen::SetTimeScreen(ScreenManager *sm) {
 }
 
 void SetTimeScreen::init() {
+  lastChangeTimestamp = now();
   menuIndex = 0;
   currentMenuValue = year() - 2000;
 }
 
 void SetTimeScreen::leftButtonPressed() {
+  lastChangeTimestamp = now();
   currentMenuValue = modulo(currentMenuValue - 1, getLowerClamp(), getUpperClamp());
 }
 
 void SetTimeScreen::rightButtonPressed() {
+  lastChangeTimestamp = now();
   currentMenuValue = modulo(currentMenuValue + 1, getLowerClamp(), getUpperClamp());
 }
 
 void SetTimeScreen::middleButtonPressed() {
+  lastChangeTimestamp = now();
   // Cycle through each value to set, loading in the existing value each time.
   switch (menuIndex) {
     case YEAR:
@@ -299,6 +400,10 @@ void SetTimeScreen::middleButtonPressed() {
 }
 
 struct DisplayData SetTimeScreen::getDisplay()  {
+  // Handle screen timeout
+  if (lastChangeTimestamp + SCREEN_STAY_SECONDS < now()) {
+    sm->setCurrentScreen(sm->timeScreen);
+  }
   struct DisplayData displayData = menuText[menuIndex];
   displayData.d[4] = c[currentMenuValue / 10];
   displayData.d[5] = c[currentMenuValue - ((currentMenuValue / 10) * 10)];
@@ -346,10 +451,12 @@ SetAlarmScreen::SetAlarmScreen(ScreenManager *sm, int alarmNumber) {
   this->alarmNumber = alarmNumber;
 }
 void SetAlarmScreen::init() {
+  lastChangeTimestamp = now();
   menuIndex = 0;
 }
 
 void SetAlarmScreen::leftButtonPressed() {
+  lastChangeTimestamp = now();
   if (! inSubmenu) {
     menuIndex = modulo(menuIndex - 1, MENU_ENTRY_COUNT);
   } else {
@@ -368,6 +475,7 @@ void SetAlarmScreen::leftButtonPressed() {
 }
 
 void SetAlarmScreen::rightButtonPressed() {
+  lastChangeTimestamp = now();
   if (! inSubmenu) {
     menuIndex = modulo(menuIndex + 1, MENU_ENTRY_COUNT);
   } else {
@@ -386,6 +494,7 @@ void SetAlarmScreen::rightButtonPressed() {
 }
 
 void SetAlarmScreen::middleButtonPressed() {
+  lastChangeTimestamp = now();
   Alarms * alarms = alarms->getInstance();
   Alarm * currentAlarm = alarms->get(alarmNumber);
 
@@ -421,6 +530,10 @@ void SetAlarmScreen::middleButtonPressed() {
 }
 
 struct DisplayData SetAlarmScreen::getDisplay()  {
+  // Handle screen timeout
+  if (lastChangeTimestamp + SCREEN_STAY_SECONDS < now()) {
+    sm->setCurrentScreen(sm->timeScreen);
+  }
   Alarms * alarms = alarms->getInstance();
   Alarm * currentAlarm = alarms->get(alarmNumber);
 

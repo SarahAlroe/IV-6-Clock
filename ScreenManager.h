@@ -4,6 +4,7 @@ class Screen;
 class TimeScreen;
 class DateScreen;
 class AlarmScreen;
+class TemperatureScreen;
 class MainMenuScreen;
 class SetTimeScreen;
 class SetAlarmScreen;
@@ -19,6 +20,7 @@ class ScreenManager {
     TimeScreen * timeScreen;
     DateScreen * dateScreen;
     AlarmScreen * alarmScreen;
+    TemperatureScreen * temperatureScreen;
     MainMenuScreen * mainMenuScreen;
     SetTimeScreen * setTimeScreen;
     SetAlarmScreen * setAlarmScreen1;
