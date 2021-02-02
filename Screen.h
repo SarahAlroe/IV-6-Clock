@@ -96,14 +96,15 @@ class MainMenuScreen : public Screen {
     struct DisplayData getDisplay();
 
   private:
-    static const int BACK = 0, ALARM1 = 1, ALARM2 = 2, ALARM3 = 3, SET_TIME = 4, SUMMER_TIME = 5, TEMP_UNIT = 6;
-    static const int MENU_ENTRY_COUNT = 7;
-    const struct DisplayData menuText[MENU_ENTRY_COUNT] = {{{c['B'], c['a'], c['c'], c['k'], 0x00, 0x00}}, {{c['A'], c['l'], c['a'], c['r'], c['m'], c[1]}}, {{c['A'], c['l'], c['a'], c['r'], c['m'], c[2]}}, {{c['A'], c['l'], c['a'], c['r'], c['m'], c[3]}}, {{c['T'], c['i'], c['m'], c['e'], 0x00, 0x00}}, {{c['S'] + c['.'], c['T'] + c['.'], 0x00, 0x00, 0x00, 0x00}}, {{c['T'], c['e'], c['m'], c['p'], 0x00, 0x00}}};
+    static const int BACK = 0, ALARM1 = 1, ALARM2 = 2, ALARM3 = 3, SET_TIME = 4, SUMMER_TIME = 5, TEMP_UNIT = 6, SNOOZE_TIME = 7;
+    static const int MENU_ENTRY_COUNT = 8;
+    const struct DisplayData menuText[MENU_ENTRY_COUNT] = {{{c['B'], c['a'], c['c'], c['k'], 0x00, 0x00}}, {{c['A'], c['l'], c['a'], c['r'], c['m'], c[1]}}, {{c['A'], c['l'], c['a'], c['r'], c['m'], c[2]}}, {{c['A'], c['l'], c['a'], c['r'], c['m'], c[3]}}, {{c['T'], c['i'], c['m'], c['e'], 0x00, 0x00}}, {{c['S'] + c['.'], c['T'] + c['.'], 0x00, 0x00, 0x00, 0x00}}, {{c['T'], c['e'], c['m'], c['p'], 0x00, 0x00}}, {{c['S'], c['n'], c['o'], c['o'], c['z'], c['e']}}};
     const long SCREEN_STAY_SECONDS = 30;
 
     ScreenManager *sm;
     int menuIndex = 0;
     long lastChangeTimestamp;
+    bool inSubmenu = false;
 };
 
 class SetTimeScreen : public Screen {

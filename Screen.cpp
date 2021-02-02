@@ -279,12 +279,22 @@ void MainMenuScreen::init() {
 
 void MainMenuScreen::leftButtonPressed() {
   lastChangeTimestamp = now();
-  menuIndex = modulo(menuIndex - 1, MENU_ENTRY_COUNT);
+  if (! inSubmenu) {
+    menuIndex = modulo(menuIndex - 1, MENU_ENTRY_COUNT);
+  } else if (menuIndex == SNOOZE_TIME) {
+    Config * config = config -> getInstance();
+    config->setSnoozeTime(max(config->getSnoozeTime()-1,1));
+  }
 }
 
 void MainMenuScreen::rightButtonPressed() {
   lastChangeTimestamp = now();
-  menuIndex = modulo(menuIndex + 1, MENU_ENTRY_COUNT);
+  if (! inSubmenu) {
+    menuIndex = modulo(menuIndex + 1, MENU_ENTRY_COUNT);
+  } else if (menuIndex == SNOOZE_TIME) {
+    Config * config = config -> getInstance();
+    config->setSnoozeTime(min(config->getSnoozeTime()+1,99));
+  }
 }
 
 void MainMenuScreen::middleButtonPressed() {
@@ -312,6 +322,8 @@ void MainMenuScreen::middleButtonPressed() {
     case TEMP_UNIT:
       config -> toggleTempUnit();
       break;
+    case SNOOZE_TIME:
+      inSubmenu = ! inSubmenu;
   }
   lastChangeTimestamp = now();
 }
@@ -334,6 +346,13 @@ struct DisplayData MainMenuScreen::getDisplay()  {
     }
   } else if (menuIndex == TEMP_UNIT) {
     displayData.d[5] = c[config->getTempUnit()];
+  } else if (menuIndex == SNOOZE_TIME && inSubmenu) {
+    displayData.d[0] = c[config->getSnoozeTime() / 10];
+    displayData.d[1] = c[config->getSnoozeTime() % 10];
+    displayData.d[2] = 0;
+    displayData.d[3] = c['m'];
+    displayData.d[4] = c['i'];
+    displayData.d[5] = c['n'];
   }
   return displayData;
 }

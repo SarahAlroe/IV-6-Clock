@@ -1,5 +1,6 @@
 #include "Alarms.h"
 #include <DS3232RTC.h>
+#include "Config.h"
 
 Alarms *Alarms::instance = 0;
 
@@ -40,9 +41,14 @@ bool Alarms::isActive() {
       }
     }
   }
-  return alarmIsOn;
+  return alarmIsOn && snoozeUntil < now();
 }
 
 void Alarms::stop() {
   alarmIsOn = false;
+}
+
+void Alarms::snooze(){
+  Config * config = config -> getInstance();
+  snoozeUntil = now() + config -> getSnoozeTime() * 60; // SnoozeTime from minutes to seconds.
 }

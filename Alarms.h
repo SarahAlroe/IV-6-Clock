@@ -1,4 +1,4 @@
-#pragma once
+#pragma  once
 #include <EEPROM.h>
 #include "Alarm.h"
 
@@ -10,6 +10,7 @@ class Alarms {
     void load();
     void save();
     void stop();
+    void snooze();
 
     Alarm * get(int i);
     bool isActive();
@@ -22,4 +23,5 @@ class Alarms {
     Alarm alarms[NUM_ALARMS] = {Alarm(), Alarm(), Alarm()};
     int lastMinute;
     bool alarmIsOn = false;
+    unsigned long snoozeUntil = 0;
 };

@@ -17,7 +17,6 @@ const int BUZZER_PIN = 13; // Buzzer pin
 const int L_BUTTON_PIN = 2; // Left button pin
 const int M_BUTTON_PIN = 3; // Middle button pin
 const int R_BUTTON_PIN = 4; // Right button pin
-const uint16_t DEBOUNCE_MS = 50;
 
 // Display
 Display display(DATA_PIN, CLOCK_PIN, LATCH_PIN, LDR_PIN);
@@ -55,6 +54,9 @@ void loop() {
       alarms -> stop();
       buzzer.stopAlarm();
     }
+    else if (lButton.pressed() || rButton.pressed()) {
+      alarms -> snooze();
+    }
   }
 
   // Get screen to process input and be displayed
@@ -74,7 +76,7 @@ void loop() {
   // Update display
   display.display(currentScreen->getDisplay());
 
-  //Check if there's anything on the serial port
+  // Check if there's anything on the serial port
   checkSerialUpdate();
 }
 
@@ -83,7 +85,7 @@ void checkSerialUpdate() {
   if (Serial.available() != 0) {
     time_t t;
     tmElements_t tm;
-    
+
     // Parse new datetime. Convert year from double digit to since 1970
     int y = Serial.parseInt();
     tm.Year = y2kYearToTm(y);
@@ -92,10 +94,10 @@ void checkSerialUpdate() {
     tm.Hour = Serial.parseInt();
     tm.Minute = Serial.parseInt();
     tm.Second = Serial.parseInt();
-    
+
     // Convert to time_t object
     t = makeTime(tm);
-    
+
     // Set RTC and locally kept time
     RTC.set(t);
     setTime(t);
