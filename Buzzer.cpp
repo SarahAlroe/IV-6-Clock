@@ -46,14 +46,14 @@ void Buzzer::updateMelody(int melody) {
       melodyDelays = MEL_2_DELAY_ARR;
       break;
     case 3:
-      toneCount = MEL_4_COUNT;
-      melodyTones = MEL_4_TONE_ARR;
-      melodyDelays = MEL_4_DELAY_ARR;
-      break;
-    case 4:
       toneCount = MEL_3_COUNT;
       melodyTones = MEL_3_TONE_ARR;
       melodyDelays = MEL_3_DELAY_ARR;
+      break;
+    case 4:
+      toneCount = MEL_4_COUNT;
+      melodyTones = MEL_4_TONE_ARR;
+      melodyDelays = MEL_4_DELAY_ARR;
       break;
   }
 }

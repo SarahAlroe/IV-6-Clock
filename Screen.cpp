@@ -98,25 +98,19 @@ struct DisplayData DateScreen::getDisplay()  {
     sm->setCurrentScreen(sm->timeScreen);
   }
 
-  char displayElements[6];
   struct DisplayData displayData;
 
   // Year
-  displayElements[0] = (year() - 2000) / 10; // Remove digits 3+4. Get the tens - int division is always floored
-  displayElements[1] = (year() - 2000) % 10; // Get ones - just get rid of the tens
+  displayData.d[0] = c[(year() - 2000) / 10]; // Remove digits 3+4. Get the tens - int division is always floored
+  displayData.d[1] = c[(year() - 2000) % 10]; // Get ones - just get rid of the tens
 
   // Month
-  displayElements[2] = month() / 10;
-  displayElements[3] = month() % 10;
+  displayData.d[2] = c[month() / 10];
+  displayData.d[3] = c[month() % 10];
 
   // Day
-  displayElements[4] = day() / 10;
-  displayElements[5] = day() % 10;
-
-  // Convert numbers to bytes for display
-  for (int i = 0; i < 6; i++) {
-    displayData.d[i] = dispNums[displayElements[i]];
-  }
+  displayData.d[4] = c[day() / 10];
+  displayData.d[5] = c[day() % 10];
 
   // Add a dot to the display for each day of the week passed. Sunday is 0 dots.
   for (int i = 0; i < weekday() - 1; i++) {

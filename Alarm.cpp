@@ -1,11 +1,11 @@
 #include "Alarm.h"
 #include "Arduino.h"
 
-Alarm::Alarm(){
-    enabled = false;
-    weekdaysActive [7];
-    fireHour = 7;
-    fireMinute = 0;
+Alarm::Alarm() {
+  enabled = false;
+  weekdaysActive [7];
+  fireHour = 7;
+  fireMinute = 0;
 }
 
 void Alarm::enable() {
@@ -74,10 +74,10 @@ bool Alarm::firesOn(int testWeekday, int testHour, int testMinute) {
   return false;
 }
 
-void Alarm::setMelody(int melody){
+void Alarm::setMelody(int melody) {
   this->melody = melody;
 }
 
-int Alarm::getMelody(){
+int Alarm::getMelody() {
   return melody;
 }

@@ -147,7 +147,7 @@ class SetAlarmScreen : public Screen {
     struct DisplayData getDisplay();
 
   private:
-    static const int ONOFF = 0, BACK = 1, TIME = 2, DOWEEK = 3, MELODY=4;
+    static const int ONOFF = 0, BACK = 1, TIME = 2, DOWEEK = 3, MELODY = 4;
     static const int MENU_ENTRY_COUNT = 5;
     const struct DisplayData menuText[MENU_ENTRY_COUNT] = {{{c['A'], 0x00, 0x00, 0x00, 0x00, 0x00}}, {{c['B'], c['a'], c['c'], c['k'], 0x00, 0x00}}, {{c['T'], c['i'], c['m'], c['e'], 0x00, 0x00}}, {{c['D'] | c['.'], c['o'] | c['.'], c['W'], c['e'], c['e'], c['k']}}, {{c['M'], c['e'], c['l'], c['o'], c['d'], c['y']}}};
     static const int W_BACK = 0, SUNDAY = 1, MONDAY = 2, TUESDAY = 3, WEDNESDAY = 4, THURSDAY = 5, FRIDAY = 6, SATURDAY = 7;

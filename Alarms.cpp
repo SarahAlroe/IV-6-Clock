@@ -49,11 +49,11 @@ void Alarms::stop() {
   alarmIsOn = false;
 }
 
-void Alarms::snooze(){
+void Alarms::snooze() {
   Config * config = config -> getInstance();
   snoozeUntil = now() + config -> getSnoozeTime() * 60; // SnoozeTime from minutes to seconds.
 }
 
-Alarm * Alarms::getActive(){
+Alarm * Alarms::getActive() {
   return activeAlarm;
 }
