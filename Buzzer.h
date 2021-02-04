@@ -1,27 +1,21 @@
+#pragma once
+
 class Buzzer {
   public:
+    int MELODY_COUNT = 4;
     Buzzer(int pin);
 
-    void playAlarm();
-    void stopAlarm();
+    void play(int melody);
+    void stop();
 
   private:
     int pin;
-    int lastSecond = 0;
+    unsigned int tonePointer = 0;
+    unsigned long nextToneAt = 0;
+    unsigned int currentMelody = 0;
+    unsigned int toneCount;
+    unsigned int *melodyTones;
+    unsigned int *melodyDelays;
+
+    void updateMelody(int melody);
 };
-
-Buzzer::Buzzer(int pin) {
-  this->pin = pin;
-  pinMode(pin, OUTPUT);
-}
-
-void Buzzer::playAlarm() {
-  if (lastSecond != second()) {
-    lastSecond = second();
-    tone(pin, 440, 500);
-  }
-}
-
-void Buzzer::stopAlarm() {
-  noTone(pin);
-}

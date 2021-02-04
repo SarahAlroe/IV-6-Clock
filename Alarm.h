@@ -3,7 +3,6 @@
 class Alarm {
   public:
     Alarm();
-
     void enable();
     void disable();
     void toggleEnabled();
@@ -13,16 +12,19 @@ class Alarm {
     void setFireAt(int hourToFire, int minuteToFire);
     void setFireAtHour(int hourToFire);
     void setFireAtMinute(int minuteToFire);
+    void setMelody(int melody);
 
     bool isEnabled();
     bool firesOnWeekday(int testWeekday);
     int hourToFire();
     int minuteToFire();
     bool firesOn(int testWeekday, int testHour, int testMinute);
+    int getMelody();
 
   private:
-    bool enabled;
+    bool enabled = false;
     bool weekdaysActive [7];
-    int fireHour;
-    int fireMinute;
+    int fireHour = 7;
+    int fireMinute = 0;
+    int melody = 1;
 };

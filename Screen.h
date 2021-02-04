@@ -2,6 +2,7 @@
 #include "Structure.h"
 #include "ScreenManager.h"
 #include <DS3232RTC.h>
+#include "Buzzer.h"
 
 class Screen {
   public:
@@ -146,9 +147,9 @@ class SetAlarmScreen : public Screen {
     struct DisplayData getDisplay();
 
   private:
-    static const int ONOFF = 0, BACK = 1, TIME = 2, DOWEEK = 3;
-    static const int MENU_ENTRY_COUNT = 4;
-    const struct DisplayData menuText[MENU_ENTRY_COUNT] = {{{c['A'], 0x00, 0x00, 0x00, 0x00, 0x00}}, {{c['B'], c['a'], c['c'], c['k'], 0x00, 0x00}}, {{c['T'], c['i'], c['m'], c['e'], 0x00, 0x00}}, {{c['D'] | c['.'], c['o'] | c['.'], c['W'], c['e'], c['e'], c['k']}}};
+    static const int ONOFF = 0, BACK = 1, TIME = 2, DOWEEK = 3, MELODY=4;
+    static const int MENU_ENTRY_COUNT = 5;
+    const struct DisplayData menuText[MENU_ENTRY_COUNT] = {{{c['A'], 0x00, 0x00, 0x00, 0x00, 0x00}}, {{c['B'], c['a'], c['c'], c['k'], 0x00, 0x00}}, {{c['T'], c['i'], c['m'], c['e'], 0x00, 0x00}}, {{c['D'] | c['.'], c['o'] | c['.'], c['W'], c['e'], c['e'], c['k']}}, {{c['M'], c['e'], c['l'], c['o'], c['d'], c['y']}}};
     static const int W_BACK = 0, SUNDAY = 1, MONDAY = 2, TUESDAY = 3, WEDNESDAY = 4, THURSDAY = 5, FRIDAY = 6, SATURDAY = 7;
     static const int WEEKDAY_ENTRY_COUNT = 8;
     const struct DisplayData weekdayText[8] = { {{c['B'], c['a'], c['c'], c['k'], 0x00, 0x00}}, {{c['S'], c['u'], c['n'], 0x00, 0x00, 0x00}}, {{c['M'], c['o'], c['n'], 0x00, 0x00, 0x00}}, {{c['T'], c['u'], c['e'], 0x00, 0x00, 0x00}}, {{c['W'], c['e'], c['d'], 0x00, 0x00, 0x00}}, {{c['T'], c['h'], c['u'], 0x00, 0x00, 0x00}}, {{c['F'], c['r'], c['i'], 0x00, 0x00, 0x00}}, {{c['S'], c['a'], c['t'], 0x00, 0x00, 0x00}}};
@@ -163,4 +164,5 @@ class SetAlarmScreen : public Screen {
     bool inSubmenu = false;
     int submenuIndex = 0;
     long lastChangeTimestamp;
+    Buzzer buzzer = new Buzzer(13);
 };

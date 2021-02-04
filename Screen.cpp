@@ -40,25 +40,19 @@ void TimeScreen::rightButtonPressed() {
 }
 
 struct DisplayData TimeScreen::getDisplay() {
-  char displayElements[6];
   struct DisplayData displayData;
 
   // Hour
-  displayElements[0] = hour() / 10; // Get the tens - int division is always floored
-  displayElements[1] = hour() - displayElements[0] * 10; // Get ones - just get rid of the tens
+  displayData.d[0] = c[hour() / 10]; // Get the tens - int division is always floored
+  displayData.d[1] = c[hour() % 10]; // Get ones - just get rid of the tens
 
   // Minute
-  displayElements[2] = minute() / 10;
-  displayElements[3] = minute() - displayElements[2] * 10;
+  displayData.d[2] = c[minute() / 10];
+  displayData.d[3] = c[minute() % 10];
 
   // Second
-  displayElements[4] = second() / 10;
-  displayElements[5] = second() - displayElements[4] * 10;
-
-  // Convert numbers to bytes for display
-  for (int i = 0; i < 6; i++) {
-    displayData.d[i] = c[displayElements[i]];
-  }
+  displayData.d[4] = c[second() / 10];
+  displayData.d[5] = c[second() % 10];
 
   // Every other second, blink the dots between hours, minutes and seconds if their alarm is on
   Alarms * alarms = alarms->getInstance();
@@ -109,15 +103,15 @@ struct DisplayData DateScreen::getDisplay()  {
 
   // Year
   displayElements[0] = (year() - 2000) / 10; // Remove digits 3+4. Get the tens - int division is always floored
-  displayElements[1] = (year() - 2000) - displayElements[0] * 10; // Get ones - just get rid of the tens
+  displayElements[1] = (year() - 2000) % 10; // Get ones - just get rid of the tens
 
   // Month
   displayElements[2] = month() / 10;
-  displayElements[3] = month() - displayElements[2] * 10;
+  displayElements[3] = month() % 10;
 
   // Day
   displayElements[4] = day() / 10;
-  displayElements[5] = day() - displayElements[4] * 10;
+  displayElements[5] = day() % 10;
 
   // Convert numbers to bytes for display
   for (int i = 0; i < 6; i++) {
@@ -275,6 +269,7 @@ MainMenuScreen::MainMenuScreen(ScreenManager *sm) {
 
 void MainMenuScreen::init() {
   lastChangeTimestamp = now();
+  inSubmenu = false;
 }
 
 void MainMenuScreen::leftButtonPressed() {
@@ -283,7 +278,7 @@ void MainMenuScreen::leftButtonPressed() {
     menuIndex = modulo(menuIndex - 1, MENU_ENTRY_COUNT);
   } else if (menuIndex == SNOOZE_TIME) {
     Config * config = config -> getInstance();
-    config->setSnoozeTime(max(config->getSnoozeTime()-1,1));
+    config->setSnoozeTime(max(config->getSnoozeTime() - 1, 1));
   }
 }
 
@@ -293,7 +288,7 @@ void MainMenuScreen::rightButtonPressed() {
     menuIndex = modulo(menuIndex + 1, MENU_ENTRY_COUNT);
   } else if (menuIndex == SNOOZE_TIME) {
     Config * config = config -> getInstance();
-    config->setSnoozeTime(min(config->getSnoozeTime()+1,99));
+    config->setSnoozeTime(min(config->getSnoozeTime() + 1, 99));
   }
 }
 
@@ -425,7 +420,7 @@ struct DisplayData SetTimeScreen::getDisplay()  {
   }
   struct DisplayData displayData = menuText[menuIndex];
   displayData.d[4] = c[currentMenuValue / 10];
-  displayData.d[5] = c[currentMenuValue - ((currentMenuValue / 10) * 10)];
+  displayData.d[5] = c[currentMenuValue % 10];
   return displayData;
 }
 
@@ -468,10 +463,13 @@ int SetTimeScreen::getLowerClamp() {
 SetAlarmScreen::SetAlarmScreen(ScreenManager *sm, int alarmNumber) {
   this->sm = sm;
   this->alarmNumber = alarmNumber;
+  buzzer = Buzzer(13);
 }
 void SetAlarmScreen::init() {
   lastChangeTimestamp = now();
   menuIndex = 0;
+  inSubmenu = false;
+  submenuIndex = 0;
 }
 
 void SetAlarmScreen::leftButtonPressed() {
@@ -479,16 +477,18 @@ void SetAlarmScreen::leftButtonPressed() {
   if (! inSubmenu) {
     menuIndex = modulo(menuIndex - 1, MENU_ENTRY_COUNT);
   } else {
+    Alarms * alarms = alarms->getInstance();
+    Alarm * currentAlarm = alarms->get(alarmNumber);
     if (menuIndex == DOWEEK) {
       submenuIndex = modulo(submenuIndex - 1, WEEKDAY_ENTRY_COUNT);
     } else if (menuIndex == TIME) {
-      Alarms * alarms = alarms->getInstance();
-      Alarm * currentAlarm = alarms->get(alarmNumber);
       if (submenuIndex == HOUR) {
         currentAlarm -> setFireAtHour(modulo(currentAlarm -> hourToFire() - 1, 24));
       } else if (submenuIndex == MINUTE) {
         currentAlarm -> setFireAtMinute(modulo(currentAlarm -> minuteToFire() - 1, 60));
       }
+    } else if (menuIndex == MELODY) {
+      currentAlarm->setMelody(max(currentAlarm->getMelody() - 1, 1));
     }
   }
 }
@@ -498,16 +498,18 @@ void SetAlarmScreen::rightButtonPressed() {
   if (! inSubmenu) {
     menuIndex = modulo(menuIndex + 1, MENU_ENTRY_COUNT);
   } else {
+    Alarms * alarms = alarms->getInstance();
+    Alarm * currentAlarm = alarms->get(alarmNumber);
     if (menuIndex == DOWEEK) {
       submenuIndex = modulo(submenuIndex + 1, WEEKDAY_ENTRY_COUNT);
     } else if (menuIndex == TIME) {
-      Alarms * alarms = alarms->getInstance();
-      Alarm * currentAlarm = alarms->get(alarmNumber);
       if (submenuIndex == HOUR) {
         currentAlarm -> setFireAtHour(modulo(currentAlarm -> hourToFire() + 1, 24));
       } else if (submenuIndex == MINUTE) {
         currentAlarm -> setFireAtMinute(modulo(currentAlarm -> minuteToFire() + 1, 60));
       }
+    } else if (menuIndex == MELODY) {
+      currentAlarm->setMelody(min(currentAlarm->getMelody() + 1, buzzer.MELODY_COUNT));
     }
   }
 }
@@ -531,6 +533,9 @@ void SetAlarmScreen::middleButtonPressed() {
         submenuIndex = 0;
         inSubmenu = true;
         break;
+      case MELODY:
+        inSubmenu = true;
+        break;
     }
   } else {
     if (menuIndex == TIME) {
@@ -544,6 +549,9 @@ void SetAlarmScreen::middleButtonPressed() {
       } else {
         currentAlarm -> toggleWeekdayEnabled(submenuIndex);
       }
+    } else if (menuIndex == MELODY) {
+      inSubmenu = false;
+      buzzer.stop();
     }
   }
 }
@@ -579,7 +587,7 @@ struct DisplayData SetAlarmScreen::getDisplay()  {
       displayNumber = currentAlarm -> minuteToFire();
     }
     displayData.d[4] = c[displayNumber / 10];
-    displayData.d[5] = c[displayNumber - ((displayNumber / 10) * 10)];
+    displayData.d[5] = c[displayNumber % 10];
   }
 
   else if (menuIndex == DOWEEK && inSubmenu) {
@@ -594,6 +602,16 @@ struct DisplayData SetAlarmScreen::getDisplay()  {
         displayData.d[5] = c['f'];
       }
     }
+  }
+
+  else if (menuIndex == MELODY && inSubmenu) {
+    displayData.d[0] = 0;
+    displayData.d[1] = 0;
+    displayData.d[2] = c[currentAlarm->getMelody() / 10];
+    displayData.d[3] = c[currentAlarm->getMelody() % 10];
+    displayData.d[4] = 0;
+    displayData.d[5] = 0;
+    buzzer.play(currentAlarm->getMelody());
   }
 
   return displayData;

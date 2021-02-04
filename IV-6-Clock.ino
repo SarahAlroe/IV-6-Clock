@@ -49,10 +49,10 @@ void setup() {
 void loop() {
   // Check alarms
   if (alarms -> isActive()) {
-    buzzer.playAlarm();
+    buzzer.play(alarms->getActive()->getMelody());
     if (mButton.pressed()) {
       alarms -> stop();
-      buzzer.stopAlarm();
+      buzzer.stop();
     }
     else if (lButton.pressed() || rButton.pressed()) {
       alarms -> snooze();

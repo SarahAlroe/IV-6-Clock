@@ -38,6 +38,7 @@ bool Alarms::isActive() {
     for (int i = 0; i < NUM_ALARMS; i++) {
       if (alarms[i].firesOn(weekday(), hour(), minute())) {
         alarmIsOn = true;
+        activeAlarm = &alarms[i];
       }
     }
   }
@@ -51,4 +52,8 @@ void Alarms::stop() {
 void Alarms::snooze(){
   Config * config = config -> getInstance();
   snoozeUntil = now() + config -> getSnoozeTime() * 60; // SnoozeTime from minutes to seconds.
+}
+
+Alarm * Alarms::getActive(){
+  return activeAlarm;
 }

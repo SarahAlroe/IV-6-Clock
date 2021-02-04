@@ -61,6 +61,7 @@ Display::Display(int inDataPin, int inClockPin, int inLatchPin, int ldrPin) {
 }
 
 void Display::display(DisplayData displayData) {
+  currentDisplayData = displayData;
   currentBrightnessDelay = getBrightnessDelay();
   targetDisplayData = displayData;
   if (lastNow + 25 < millis()) {

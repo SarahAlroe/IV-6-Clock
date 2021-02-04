@@ -13,15 +13,17 @@ class Alarms {
     void snooze();
 
     Alarm * get(int i);
+    Alarm * getActive();
     bool isActive();
 
   private:
     Alarms();
     static Alarms *instance;
+    Alarm alarms[NUM_ALARMS] = {Alarm(), Alarm(), Alarm()};
     const int alarmAddress [NUM_ALARMS] = {20, 21 + sizeof(alarms[0]), 22 + 2 * sizeof(alarms[0])};
 
-    Alarm alarms[NUM_ALARMS] = {Alarm(), Alarm(), Alarm()};
     int lastMinute;
     bool alarmIsOn = false;
     unsigned long snoozeUntil = 0;
+    Alarm * activeAlarm;
 };
