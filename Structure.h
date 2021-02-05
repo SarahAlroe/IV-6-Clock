@@ -99,9 +99,9 @@ const unsigned int MEL_2_COUNT = 4;
 const unsigned int PROGMEM MEL_2_TONE_ARR[MEL_2_COUNT] = {N_AS7, 0, N_AS7, 0};
 const unsigned int PROGMEM MEL_2_DELAY_ARR[MEL_2_COUNT] = {50, 100, 50, 800};
 
-const unsigned int MEL_3_COUNT = 18;
-const unsigned int PROGMEM MEL_3_TONE_ARR[MEL_3_COUNT] =   {N_E5, 0,   N_G5, 0,   N_G5, N_E5, N_C5, 0,    N_A4, 0,   N_C5, 0,  N_A4, 0,  N_E5, 0,  N_D5, 0};
-const unsigned int PROGMEM MEL_3_DELAY_ARR[MEL_3_COUNT] =  {400,     100, 150,     200, 150,     200,     200,     500, 400,     100, 300,     50, 100,     50, 150,      100, 150,     600};
+const unsigned int MEL_3_COUNT = 91;
+const unsigned int PROGMEM MEL_3_TONE_ARR[MEL_3_COUNT] =   {N_E5, 0, N_G5, 0, N_G5, N_E5, 0, N_C5, 0, N_A4, 0, N_C5, 0, N_A4, 0, N_E5, 0, N_D5, 0, N_E5, 0, N_G5, 0, N_G5, N_E5, 0, N_C5, 0, N_A4, 0, N_C5, 0, N_A4, 0, N_E5, 0, N_D5, 0, N_E6, N_F6, N_G6, 0, N_F6, N_E6, 0, N_F6, N_E6, N_C6, N_A5, N_G5, N_F6, N_E6, N_F6, N_A6, N_G6, N_A6, N_C7, N_A6, N_G6, N_F6, N_E6, N_D6, N_E6, 0, N_C6, N_G5, N_C6, N_B5, N_C6, N_D6, N_E6, 0, N_G6, N_C6, N_E6, N_F6, N_E6, N_F6, N_D6, N_C6, N_B5, N_C6, 0, N_C6, 0, N_C6, 0, N_C6, N_E6, N_D6, 0};
+const unsigned int PROGMEM MEL_3_DELAY_ARR[MEL_3_COUNT] =  {400, 100, 150, 200, 150, 225, 50, 225, 500, 400, 100, 300, 50, 100, 50, 200, 100, 200, 500, 400, 100, 150, 200, 150, 225, 50, 225, 500, 400, 100, 300, 50, 100, 50, 200, 100, 200, 300, 100, 100, 2300, 0, 200, 250, 0, 250, 250, 250, 250, 3000, 250, 250, 250, 250, 2500, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 2000, 250, 250, 250, 250, 500, 250, 500, 500, 500, 250, 250, 250, 500, 250, 250, 2000, 250, 250, 250, 250, 150, 100, 250, 250, 500};
 
 const unsigned int MEL_4_COUNT = 7;
 const unsigned int PROGMEM MEL_4_TONE_ARR[MEL_4_COUNT] =   {N_DS7, N_DS6, N_AS6, N_GS6, N_DS7, N_AS6, 0};
